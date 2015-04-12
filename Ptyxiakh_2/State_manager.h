@@ -15,7 +15,8 @@
 #ifndef STATE_MANAGER_H_
 #define STATE_MANAGER_H_
 
-// Forward declarations
+//#include "General_events.h"
+//#include "General_states.h"
 enum class States;
 enum class Events;
 

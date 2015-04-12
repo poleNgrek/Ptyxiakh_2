@@ -37,7 +37,7 @@ static const char* event_string[] =
 // Simple function that takes a Events enum class and returns the C-style array.
 // Note: enum class cannot be implicitly converted to int, thus a static_cast
 // is needed.
-const char* event_to_text(Events events)
+static const char* event_to_text(Events events)
 {
     return event_string[static_cast<int>(events)];
 }

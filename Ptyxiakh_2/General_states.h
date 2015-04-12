@@ -39,7 +39,7 @@ static const char* state_string[] =
 // Simple function that takes a States enum class and returns the C-style array.
 // Note: enum class cannot be implicitly converted to int, thus a static_cast
 // is needed.
-const char* state_to_text(States state)
+static const char* state_to_text(States state)
 {
     return state_string[static_cast<int>(state)];
 }
