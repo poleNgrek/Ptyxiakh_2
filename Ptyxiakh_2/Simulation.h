@@ -31,6 +31,7 @@ enum class Events;
 class Simulation;
 
 /******************************************************************************/
+// States of Simulation
 // State Start
 class Simulation_start : public State_manager<Simulation>
 {

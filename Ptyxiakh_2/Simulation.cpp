@@ -4,6 +4,12 @@
 
 #include <iostream>
 
+/******************************************************************************/
+
+// Simulation
+
+// Constructor
+// Initializes state classes and starts the first state.
 Simulation::Simulation() : 
     simulation_start(*this),
     simulation_running(*this),
@@ -25,12 +31,14 @@ Simulation::~Simulation()
     m_current_state = nullptr;
 }
 
+// Uses the event handler of the current state.
 void Simulation::schedule_event(Events events)
 {
     // The function handle_event is defined in each event Simulation has.
     m_current_state->handle_event(events);
 }
 
+// Uses a basic switch statement to see what new state has been selected.
 void Simulation::change_state(States new_state)
 {
     if (m_current_state)
@@ -73,8 +81,13 @@ void Simulation::change_state(States new_state)
 void Simulation::initialization()
 {
 }
+/******************************************************************************/
 
-//////////////////////////////////////////////////////////////////////////////
+/******************************************************************************/
+
+// States of Simulation
+
+// State Start
 Simulation_start::Simulation_start(Simulation& state_controller)
     : State_manager(States::SIM_START, state_controller)
 {
@@ -105,6 +118,7 @@ void Simulation_start::handle_event(Events events)
     }
 }
 
+// State Running
 Simulation_running::Simulation_running(Simulation& state_controller)
     : State_manager(States::SIM_RUN, state_controller)
 {
@@ -135,6 +149,7 @@ void Simulation_running::handle_event(Events events)
     }
 }
 
+// State Exit
 Simulation_exit::Simulation_exit(Simulation& state_controller)
     : State_manager(States::SIM_END, state_controller)
 {
@@ -164,3 +179,4 @@ void Simulation_exit::handle_event(Events events)
     break;
     }*/
 }
+/******************************************************************************/

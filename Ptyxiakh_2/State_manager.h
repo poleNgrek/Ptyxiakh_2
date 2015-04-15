@@ -15,6 +15,7 @@
 #ifndef STATE_MANAGER_H_
 #define STATE_MANAGER_H_
 
+// Forward declarations
 enum class States;
 enum class Events;
 
