@@ -10,8 +10,8 @@
   * handler (handle_event), which are inherited from the State_manager class.
   * These functions need to be overriden.
   *
-  * Version 0.7
-  * Last edit: 11/04/2015
+  * Version 0.8
+  * Last edit: 15/04/2015
   *
   * K. Triantafyllou
   * B. Paleologos
@@ -82,6 +82,12 @@ public:
     // Static so it can be run only once
     static void initialization();
 
+    // Event setter
+    void set_event(Events);
+
+    // Event getter
+    Events get_event();
+
     /*+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-*/
     // Deleted constructors and functions
     Simulation(const Simulation&) = delete;
@@ -101,6 +107,8 @@ private:
     // Current and previous state
     State_manager<Simulation>* m_current_state;
     States m_previous_state;
+    // Current event being handled
+    Events m_current_event;
 
     // Goes to a new state
     void change_state(States);

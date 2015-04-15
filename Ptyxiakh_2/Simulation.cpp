@@ -15,7 +15,8 @@ Simulation::Simulation() :
     simulation_running(*this),
     simulation_exit(*this),
     m_current_state(nullptr),
-    m_previous_state(States::ILLEGAL)
+    m_previous_state(States::ILLEGAL),
+    m_current_event(Events::ILLEGAL)
 {
     change_state(States::SIM_START);
 }
@@ -36,6 +37,7 @@ void Simulation::schedule_event(Events events)
 {
     // The function handle_event is defined in each event Simulation has.
     m_current_state->handle_event(events);
+    set_event(events);
 }
 
 // Uses a basic switch statement to see what new state has been selected.
@@ -80,6 +82,16 @@ void Simulation::change_state(States new_state)
 
 void Simulation::initialization()
 {
+}
+
+void Simulation::set_event(Events events)
+{
+    m_current_event = events;
+}
+
+Events Simulation::get_event()
+{
+    return m_current_event;
 }
 /******************************************************************************/
 
