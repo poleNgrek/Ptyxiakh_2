@@ -10,7 +10,7 @@
   * handler (handle_event), which are inherited from the State_manager class.
   * These functions need to be overriden.
   *
-  * Version 0.8
+  * Version 0.8.1
   * Last edit: 15/04/2015
   *
   * K. Triantafyllou
