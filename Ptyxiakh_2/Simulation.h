@@ -82,9 +82,6 @@ public:
     // Static so it can be run only once
     static void initialization();
 
-    // Event setter
-    void set_event(Events);
-
     // Event getter
     Events get_event();
 
@@ -112,6 +109,8 @@ private:
 
     // Goes to a new state
     void change_state(States);
+    // Event setter
+    void set_event(Events);
 };
 /******************************************************************************/
 

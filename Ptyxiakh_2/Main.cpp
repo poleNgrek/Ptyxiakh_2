@@ -48,7 +48,7 @@ void wait_for_input(Simulation& sim)
     std::cin >> s;
     if (s == 'e')
     {
-        sim.set_event(Events::SIM_END);
+        sim.schedule_event(Events::SIM_END);
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }
