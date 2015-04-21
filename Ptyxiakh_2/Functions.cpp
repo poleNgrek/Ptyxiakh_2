@@ -20,28 +20,32 @@ std::future<void> simulation_event_generator(Simulation& sim)
 
 void wait_for_input(Simulation& sim)
 {
-    char s;
+    char s = 'i';
     std::mutex m;
-    std::lock_guard<std::mutex> lock(m);
-    if (std::cin >> s)
+    std::unique_lock<std::mutex> guard_cout(m, std::defer_lock);
+    while (s != 'e')
     {
-        switch (s)
+        guard_cout.lock();
+        if (std::cin >> s)
         {
-        case 'r':
-            break;
-        case 's':
-            break;
-        case 'e':
-            sim.schedule_event(Events::SIM_END);
-            break;
-        default:
-            break;
+            switch (s)
+            {
+            case 'r':
+                break;
+            case 's':
+                break;
+            case 'e':
+                sim.schedule_event(Events::SIM_END);
+                break;
+            default:
+                break;
+            }
         }
-        
-    }
-    else
-    {
-        std::this_thread::yield();
+        else
+        {
+            std::this_thread::yield();
+        }
+        guard_cout.unlock();
     }
 }
 
