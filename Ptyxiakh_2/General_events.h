@@ -24,6 +24,7 @@ enum class Events
     SIM_END,
     DISP_JOB,
     DISP_IDLE,
+	CORE_IDLE,
     CORE_TOPOLOGY,
     CORE_JOB
 };
@@ -32,7 +33,7 @@ enum class Events
 static const char* event_string[] =
 {
     "ILLEGAL", "SIM_START", "SIM_STOP", "SIM_END", "DISP_JOB", "DISP_IDLE",
-    "CORE_TOPOLOGY", "CORE_JOB"
+    "CORE_TOPOLOGY", "CORE_JOB","CORE_IDLE"
 };
 
 // Simple function that takes a Events enum class and returns the C-style array.
