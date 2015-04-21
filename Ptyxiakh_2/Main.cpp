@@ -8,13 +8,13 @@ int main()
     Simulation sim;
     bool flag = false;
 
-    auto worker_thread = simulation_event_generator(sim);
-
     std::cout <<
         "Enter 'r' to run\n" <<
         "'s' to stop\n" <<
         "'e' to exit.\n" <<
         " > ";
+
+    auto worker_thread = simulation_event_generator(sim);
 
     while (!flag) // Infinite loop
     {
