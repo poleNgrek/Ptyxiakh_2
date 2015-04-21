@@ -1,26 +1,20 @@
 #include "Simulation.h"
-
-#include "General_events.h"
+#include "Functions.h"
 
 #include <iostream>
-
-//#include "Functions.h"
-
-#include <thread>
-#include <future>
-#include <chrono>
-
-bool check_message(Simulation& sim);
-void wait_for_input(Simulation& sim);
 
 int main()
 {
     Simulation sim;
-
     bool flag = false;
 
-    std::future<void> input = std::async(std::launch::async,
-        wait_for_input, std::ref(sim));
+    auto worker_thread = simulation_event_generator(sim);
+
+    std::cout <<
+        "Enter 'r' to run\n" <<
+        "'s' to stop\n" <<
+        "'e' to exit.\n" <<
+        " > ";
 
     while (!flag) // Infinite loop
     {
@@ -28,27 +22,8 @@ int main()
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 
-    input.get();
+    worker_thread.get();
 
     return 0;
 }
 
-bool check_message(Simulation& sim)
-{
-    if (sim.get_event() == Events::SIM_END)
-    {
-        return true;
-    }
-    return false;
-}
-
-void wait_for_input(Simulation& sim)
-{
-    char s;
-    std::cin >> s;
-    if (s == 'e')
-    {
-        sim.schedule_event(Events::SIM_END);
-    }
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-}
