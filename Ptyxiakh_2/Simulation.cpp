@@ -11,7 +11,7 @@
 // Constructor
 // Initializes state classes and starts the first state.
 Simulation::Simulation() : 
-    simulation_idle(*this),
+    simulation_start(*this),
     simulation_running(*this),
     simulation_exit(*this),
     m_current_state(nullptr),
@@ -54,7 +54,7 @@ void Simulation::change_state(States new_state)
     switch (new_state)
     {
     case States::SIM_START:
-        m_current_state = &simulation_idle;
+        m_current_state = &simulation_start;
         break;
     case States::SIM_RUN:
         m_current_state = &simulation_running;
@@ -99,23 +99,23 @@ Events Simulation::get_event()
 
 // States of Simulation
 
-// State Idle
-Simulation_idle::Simulation_idle(Simulation& state_controller)
+// State Start
+Simulation_start::Simulation_start(Simulation& state_controller)
     : State_manager(States::SIM_START, state_controller)
 {
 }
 
-void Simulation_idle::on_entry()
+void Simulation_start::on_entry()
 {
-    std::cout << "Simulation_idle on_entry()\n";
+    std::cout << "Simulation_start on_entry()\n";
 }
 
-void Simulation_idle::on_exit()
+void Simulation_start::on_exit()
 {
-    std::cout << "Simulation_idle on_exit()\n";
+    std::cout << "Simulation_start on_exit()\n";
 }
 
-void Simulation_idle::handle_event(Events events)
+void Simulation_start::handle_event(Events events)
 {
     switch (events)
     {

@@ -10,8 +10,8 @@
   * handler (handle_event), which are inherited from the State_manager class.
   * These functions need to be overriden.
   *
-  * Version 0.9
-  * Last edit: 22/04/2015
+  * Version 0.8
+  * Last edit: 15/04/2015
   *
   * K. Triantafyllou
   * B. Paleologos
@@ -32,11 +32,11 @@ class Simulation;
 
 /******************************************************************************/
 // States of Simulation
-// State Idle
-class Simulation_idle : public State_manager<Simulation>
+// State Start
+class Simulation_start : public State_manager<Simulation>
 {
 public:
-    Simulation_idle(Simulation&);
+    Simulation_start(Simulation&);
 
     void on_entry() override;
     void on_exit() override;
@@ -82,6 +82,9 @@ public:
     // Static so it can be run only once
     static void initialization();
 
+    // Event setter
+    void set_event(Events);
+
     // Event getter
     Events get_event();
 
@@ -92,12 +95,12 @@ public:
     /*+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-*/
 private:
     // Friended state classes
-    friend class Simulation_idle;
+    friend class Simulation_start;
     friend class Simulation_running;
     friend class Simulation_exit;
 
     // States declarations
-    Simulation_idle simulation_idle;
+    Simulation_start simulation_start;
     Simulation_running simulation_running;
     Simulation_exit simulation_exit;
 
@@ -109,8 +112,6 @@ private:
 
     // Goes to a new state
     void change_state(States);
-    // Event setter
-    void set_event(Events);
 };
 /******************************************************************************/
 
