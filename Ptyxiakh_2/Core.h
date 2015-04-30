@@ -10,7 +10,7 @@ enum class States;
 enum class Events;
 
 class Core;
-class Dispacher;
+class Dispatcher;
 
 class Core_topology : public State_manager<Core>
 {

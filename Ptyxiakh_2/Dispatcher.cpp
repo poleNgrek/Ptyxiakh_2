@@ -1,4 +1,4 @@
-#include "Dispacher.h"
+#include "Dispatcher.h"
 #include "Core.h"
 #include "General_states.h"
 #include "General_events.h"
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Dispacher::Dispacher() :
+Dispatcher::Dispatcher() :
 	disp_state_serve(*this),
 	disp_state_idle(*this),
 	disp_curr_state(nullptr),
@@ -18,7 +18,7 @@ Dispacher::Dispacher() :
 	change_state(States::DISP_IDLE);
 }
 
-Dispacher::~Dispacher()
+Dispatcher::~Dispatcher()
 {
 	if(disp_curr_state)
 	{
@@ -28,14 +28,14 @@ Dispacher::~Dispacher()
 	disp_curr_state = nullptr;
 }
 
-void Dispacher::schedule_event(Events event)
+void Dispatcher::schedule_event(Events event)
 {
 	disp_curr_state->handle_event(event);
 }
 
 //CORES should NOT be able to get a job while inside topology state
 //we assume topology state as a set up state where cores join dispatchers' queues
-void Dispacher::assign_job(int job)
+void Dispatcher::assign_job(int job)
 {
 	//getting the first core from dispacher's core_queue.
 	Core& kor = get_core_q();
@@ -59,12 +59,12 @@ void Dispacher::assign_job(int job)
 	}
 }
 
-void Dispacher::fill_core_queue()
+void Dispatcher::fill_core_queue()
 {
 
 }
 
-void Dispacher::change_state(States new_state)
+void Dispatcher::change_state(States new_state)
 {
 	//copy-pasta from charlie's awesome error checking
 	if (disp_curr_state)
@@ -104,21 +104,21 @@ void Dispacher::change_state(States new_state)
 /* STATE CLASSES CONSTRUCTORS WITH THEIR FUNCTIONS ON_ENTRY/ON_EXIT */
 
 						//DISPACHER_IDLE
-Dispacher_idle::Dispacher_idle(Dispacher& state_controller)
+Dispatcher_idle::Dispatcher_idle(Dispatcher& state_controller)
 	: State_manager(States::DISP_IDLE, state_controller)
 	{}
 
-void Dispacher_idle::on_entry()
+void Dispatcher_idle::on_entry()
 {
 	std::cout << "This is Dispacher_idle on_entry"<<std::endl;
 }
 
-void Dispacher_idle::on_exit()
+void Dispatcher_idle::on_exit()
 {
 	std::cout<<"This is Dispacher_idle on_exit"<<std::endl;
 }
 
-void Dispacher_idle::handle_event(Events event)
+void Dispatcher_idle::handle_event(Events event)
 {
 	switch(event)
 	{
@@ -134,23 +134,23 @@ void Dispacher_idle::handle_event(Events event)
 // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
 						//DISPACHER_SERVE
-Dispacher_serve::Dispacher_serve(Dispacher& state_controller)
+Dispatcher_serve::Dispatcher_serve(Dispatcher& state_controller)
 	: State_manager(States::DISP_SERVE, state_controller)
 	{}
 
-void Dispacher_serve::on_entry()
+void Dispatcher_serve::on_entry()
 {
 	std::cout<<"Dis iz Dispacher_serve on_entry IN DA HOYSE"<<std::endl;
 
 
 }
 
-void Dispacher_serve::on_exit()
+void Dispatcher_serve::on_exit()
 {
 	std::cout<<"Diz iz Dispacher_serve on_exit"<<std::endl;
 }
 
-void Dispacher_serve::handle_event(Events event)
+void Dispatcher_serve::handle_event(Events event)
 {
 	switch(event)
 	{

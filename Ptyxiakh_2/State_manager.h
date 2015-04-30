@@ -50,8 +50,8 @@ public:
     /*+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-*/
     // Deleted constructors and functions
     State_manager() = delete;
-    State_manager(const State_manager&) = delete;
-    State_manager& operator=(const State_manager&) = delete;
+    /*State_manager(const State_manager&) = delete;
+    State_manager& operator=(const State_manager&) = delete;*/
     /*+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-*/
 protected:
     States m_state_id;
