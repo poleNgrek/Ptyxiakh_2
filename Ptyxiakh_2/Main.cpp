@@ -1,7 +1,17 @@
 #include "Simulation.h"
+#include "Dispatcher.h"
+#include "Core.h"
 #include "Functions.h"
+#include "Externals.h"
 
+#include <vector>
 #include <iostream>
+
+class Dispatcher;
+class Core;
+
+std::vector<Dispatcher> vDisp;
+std::vector<Core> vCore;
 
 int main()
 {
@@ -26,3 +36,4 @@ int main()
 
     return 0;
 }
+

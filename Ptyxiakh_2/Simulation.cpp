@@ -1,17 +1,22 @@
 #include "Simulation.h"
 #include "General_states.h"
 #include "General_events.h"
+#include "Functions.h"
+#include "Externals.h"
 
 #include <iostream>
 #include <cstdlib>
 
 /******************************************************************************/
 
+//extern std::vector<Dispatcher> vDisp;
+//extern std::vector<Core> vCore;
+
 // Simulation
 
 // Constructor
 // Initializes state classes and starts the first state.
-Simulation::Simulation() : 
+Simulation::Simulation() :
     simulation_start(*this),
     simulation_running(*this),
     simulation_exit(*this),
@@ -32,6 +37,7 @@ Simulation::~Simulation()
     }
     m_current_state = nullptr;
 }
+
 
 // Uses the event handler of the current state.
 void Simulation::schedule_event(Events events)
@@ -83,6 +89,9 @@ void Simulation::change_state(States new_state)
 
 void Simulation::initialization()
 {
+    std::cout<<"Simulation on initialization !!"<<std::endl;
+    populate_dispatchers(vDisp);
+    populate_cores(vCore);
 }
 
 void Simulation::set_event(Events events)
@@ -109,11 +118,13 @@ Simulation_start::Simulation_start(Simulation& state_controller)
 void Simulation_start::on_entry()
 {
     std::cout << "Simulation_start on_entry()\n";
+    m_state_machine_controller.initialization();
 }
 
 void Simulation_start::on_exit()
 {
     std::cout << "Simulation_start on_exit()\n";
+
 }
 
 void Simulation_start::handle_event(Events events)
@@ -171,6 +182,20 @@ Simulation_exit::Simulation_exit(Simulation& state_controller)
 void Simulation_exit::on_entry()
 {
     std::cout << "Simulation_exit on_entry()\n";
+
+    if (!vDisp.empty())
+    {
+        if (!vCore.empty())
+        {
+            std::cout<<"I need to destruct "<< vCore.size() <<" cores."<<std::endl;
+            vCore.clear();
+            std::cout<<vCore.size()<<" remain"<<std::endl;
+
+        }
+        std::cout<<"I need to destruct "<< vDisp.size() <<" disps."<<std::endl;
+        vDisp.clear();
+        std::cout<<vDisp.size()<<" remain"<<std::endl;
+    }
 }
 
 void Simulation_exit::on_exit()
