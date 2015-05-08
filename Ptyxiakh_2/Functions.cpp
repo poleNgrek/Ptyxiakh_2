@@ -74,7 +74,7 @@ void populate_dispatchers()
 
     /// Create the actual Dispatchers
     for (auto i=0; i<dispNumb; ++i){
-        vDisp.push_back(Dispatcher());
+        vDisp.push_back(std::unique_ptr<Dispatcher> (new Dispatcher));
         std::cout<<"Disp n."<<i<<" Created"<<std::endl;
 }
 }
@@ -92,7 +92,7 @@ void populate_cores()
     /// Create the actual Dispatchers
     for (auto i=0; i<coreNumb; ++i)
     {
-        vCore.push_back(Core());
+        vCore.push_back(std::unique_ptr<Core> (new Core));
         //vCore.at(i).id=i;
        // std::cout<<"Fake ID for core: "<<vCore.at(i).id<<" (Inside function/populate_cores)\n";
     }

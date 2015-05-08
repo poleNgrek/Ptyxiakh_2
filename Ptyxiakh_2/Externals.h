@@ -2,12 +2,13 @@
 #define EXTERNALS_H_
 
 #include <vector>
+#include <memory>
 
 class Dispatcher;
 class Core;
 
-extern std::vector<Dispatcher> vDisp;
-extern std::vector<Core> vCore;
+extern std::vector<std::unique_ptr<Dispatcher>> vDisp;
+extern std::vector<std::unique_ptr<Core>> vCore;
 
 
 #endif // EXTERNALS_H_

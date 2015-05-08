@@ -10,8 +10,8 @@
 class Dispatcher;
 class Core;
 
-std::vector<Dispatcher> vDisp;
-std::vector<Core> vCore;
+std::vector<std::unique_ptr<Dispatcher>> vDisp;
+std::vector<std::unique_ptr<Core>> vCore;
 
 int main()
 {
