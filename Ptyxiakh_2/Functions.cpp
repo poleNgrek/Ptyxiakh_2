@@ -62,7 +62,7 @@ bool check_message(Simulation& sim)
     return false;
 }
 
-void populate_dispatchers(std::vector<Dispatcher>& vDisp)
+void populate_dispatchers()
 {
     std::cout << "Enter your desired number of Dispatchers:\n";
     std::cout << "> ";
@@ -79,7 +79,7 @@ void populate_dispatchers(std::vector<Dispatcher>& vDisp)
 }
 }
 
-void populate_cores(std::vector<Core>& vCore)
+void populate_cores()
 {
     std::cout << "Enter your desired number of Cores:\n";
     std::cout << "> ";

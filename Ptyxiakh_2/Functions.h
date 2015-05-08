@@ -25,8 +25,8 @@ class Simulation;
 class Dispatcher;
 class Core;
 
-void populate_dispatchers(std::vector<Dispatcher>& vDisp);
-void populate_cores(std::vector<Core>& vCore);
+void populate_dispatchers();
+void populate_cores();
 std::future<void> simulation_event_generator(Simulation& sim);
 bool check_message(Simulation& sim);
 

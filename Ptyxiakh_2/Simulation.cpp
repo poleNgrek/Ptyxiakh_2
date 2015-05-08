@@ -90,8 +90,8 @@ void Simulation::change_state(States new_state)
 void Simulation::initialization()
 {
     std::cout<<"Simulation on initialization !!"<<std::endl;
-    populate_dispatchers(vDisp);
-    populate_cores(vCore);
+    populate_dispatchers();
+    populate_cores();
 }
 
 void Simulation::set_event(Events events)
