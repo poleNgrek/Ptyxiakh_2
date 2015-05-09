@@ -97,3 +97,18 @@ void populate_cores()
        // std::cout<<"Fake ID for core: "<<vCore.at(i).id<<" (Inside function/populate_cores)\n";
     }
 }
+
+int random_disp()
+{
+    int random_disp;
+    srand((unsigned)time(0));
+
+    int hi = vDisp.size();
+    int lo = 0;
+    int vD_range = (hi - lo) + 1;
+
+
+    random_disp = lo + int(rand()% vD_range);
+
+    return random_disp;
+}

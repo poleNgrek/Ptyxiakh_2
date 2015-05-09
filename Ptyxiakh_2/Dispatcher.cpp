@@ -2,7 +2,7 @@
 #include "Core.h"
 #include "General_states.h"
 #include "General_events.h"
-//#include "Externals.h"
+#include "Externals.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -59,10 +59,6 @@ void Dispatcher::assign_job(int job)
 	}
 }
 
-void Dispatcher::fill_core_queue()
-{
-
-}
 
 void Dispatcher::change_state(States new_state)
 {

@@ -1,9 +1,14 @@
 #include "Core.h"
+#include "Dispatcher.h"
 #include "General_states.h"
 #include "General_events.h"
+#include "Functions.h"
+#include "Externals.h"
 
 #include <iostream>
 #include <cstdlib>
+
+class Dispatcher;
 
 Core::Core() :
 	core_state_topology(*this),
@@ -76,6 +81,20 @@ void Core::change_state(States new_state)
 	core_curr_state->on_entry();
 }
 
+
+int Core::fill_core_queue()
+{
+    int dispatchR;
+
+    if(!is_inside_disp()){
+       dispatchR = random_disp();
+       vDisp.at(dispatchR)->add_core_q(*this);
+       it_is_now();//inside the core_queue of a random disp hopefully
+    }
+
+    return dispatchR;
+}
+
 /* STATE CLASSES CONSTRUCTORS WITH THEIR FUNCTIONS ON_ENTRY/ON_EXIT */
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // //
@@ -88,6 +107,8 @@ Core_topology::Core_topology(Core& state_controller)
 void Core_topology::on_entry()
 {
 	std::cout<<"Dis iz Core_topology on_entry IN DA HOYSE"<<std::endl;
+	int dsptcher = m_state_machine_controller.fill_core_queue();
+	std::cout<<"I joined successfully disp No. "<<dsptcher<<std::endl;
 }
 
 void Core_topology::on_exit()

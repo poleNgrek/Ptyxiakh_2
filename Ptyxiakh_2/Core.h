@@ -50,13 +50,19 @@ class Core
 
 		void schedule_event(Events);
 		Events get_event();
+		int fill_core_queue();
 
 		int get_core_job_q() {return core_job_queue.front();}
 		void add_core_job_q(int job) {core_job_queue.push(job);}
 		void pop_core_job_q() {core_job_queue.pop();}
 
+		//getter/setter to check if it is registered to any of the dispatchers' queue
+		bool is_inside_disp(){return inside_disp; }
+		void it_is_now(){inside_disp = true;}
+
 	private:
 		queue<int> core_job_queue;
+		bool inside_disp = false;
 
 		friend class Core_topology;
 		friend class Core_idle;

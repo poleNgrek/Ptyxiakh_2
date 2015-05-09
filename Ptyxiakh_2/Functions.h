@@ -20,6 +20,8 @@
 
 #include <future>
 #include <vector>
+#include <random>
+#include <stdlib.h>
 
 class Simulation;
 class Dispatcher;
@@ -29,5 +31,6 @@ void populate_dispatchers();
 void populate_cores();
 std::future<void> simulation_event_generator(Simulation& sim);
 bool check_message(Simulation& sim);
+int random_disp();
 
 #endif

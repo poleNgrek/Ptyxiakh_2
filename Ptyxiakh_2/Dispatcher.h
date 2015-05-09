@@ -71,7 +71,7 @@ class Dispatcher
 
 		void schedule_event(Events);
 		void assign_job(int job);
-		void fill_core_queue();
+		//void fill_core_queue();
 
 		/* Getters for dispatcher queues */
 
@@ -83,7 +83,7 @@ class Dispatcher
 
 		void add_job_q(int job) {disp_job_queue.push(job);}
 
-		void add_core_q(Core core) {disp_core_queue.push(core);}
+		void add_core_q(Core& core) {disp_core_queue.push(core);}
 
 		/*pop functions*/
 

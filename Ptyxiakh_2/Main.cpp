@@ -13,10 +13,13 @@ class Core;
 std::vector<std::unique_ptr<Dispatcher>> vDisp;
 std::vector<std::unique_ptr<Core>> vCore;
 
+
 int main()
 {
     Simulation sim;
     bool flag = false;
+    int sth = random_disp();
+    std::cout<<sth<<" random disp"<<std::endl;
 
     std::cout <<
     "Enter 'r' to run\n" <<
