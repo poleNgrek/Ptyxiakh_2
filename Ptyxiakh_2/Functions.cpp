@@ -101,11 +101,11 @@ void populate_cores()
 int random_disp()
 {
     int random_disp;
-    srand((unsigned)time(0));
+    
 
     int hi = vDisp.size();
     int lo = 0;
-    int vD_range = (hi - lo) + 1;
+    int vD_range = (hi - lo)/* + 1*/;
 
 
     random_disp = lo + int(rand()% vD_range);

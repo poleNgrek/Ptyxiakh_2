@@ -183,15 +183,16 @@ void Simulation_exit::on_entry()
 {
     std::cout << "Simulation_exit on_entry()\n";
 
+    /*if (!vCore.empty())
+    {
+        std::cout << "I need to destruct " << vCore.size() << " cores." << std::endl;
+        vCore.clear();
+        std::cout << vCore.size() << " remain" << std::endl;
+
+    }*/
+
     if (!vDisp.empty())
     {
-        if (!vCore.empty())
-        {
-            std::cout<<"I need to destruct "<< vCore.size() <<" cores."<<std::endl;
-            vCore.clear();
-            std::cout<<vCore.size()<<" remain"<<std::endl;
-
-        }
         std::cout<<"I need to destruct "<< vDisp.size() <<" disps."<<std::endl;
         vDisp.clear();
         std::cout<<vDisp.size()<<" remain"<<std::endl;

@@ -6,6 +6,8 @@
 
 #include <vector>
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 class Dispatcher;
 class Core;
@@ -13,9 +15,9 @@ class Core;
 std::vector<std::unique_ptr<Dispatcher>> vDisp;
 std::vector<std::unique_ptr<Core>> vCore;
 
-
 int main()
 {
+    srand(static_cast<unsigned int>(time(0)));
     Simulation sim;
     bool flag = false;
     int sth = random_disp();
