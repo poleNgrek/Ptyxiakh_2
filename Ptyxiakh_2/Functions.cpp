@@ -42,6 +42,8 @@ void wait_for_input(Simulation& sim)
                     sim.schedule_event(Events::SIM_END);
                     break;
                 default:
+                    std::cout<<"Please choose a valid option"<<std::endl;
+                    std::cout <<"Enter\n 'r' to run\n" <<"'s' to stop\n" <<"'e' to exit.\n" <<" > ";
                     break;
             }
         }
@@ -59,6 +61,60 @@ bool check_message(Simulation& sim)
     {
         return true;
     }
+    return false;
+}
+
+void w8_for_input(Simulation& sim);
+
+std::future<void> sim_running_thread(Simulation& sim)
+{
+    std::future<void> input = std::async(std::launch::async,
+                                         w8_for_input, std::ref(sim));
+    return input;
+}
+
+void w8_for_input(Simulation& sim)
+{
+    char s = 'i';
+    std::mutex m;
+    std::unique_lock<std::mutex> guard_cout(m, std::defer_lock);
+    while (s != 'e')
+    {
+        guard_cout.lock();
+        if (std::cin >> s)
+        {
+            switch (s)
+            {
+                case 'r':
+                    //sim.schedule_event(Events::SIM_START);
+                    break;
+                case 'p':
+                    sim.schedule_event(Events::SIM_STOP);
+                    guard_cout.unlock();
+                    std::this_thread::yield();
+                    break;
+                case 'e':
+                    //sim.schedule_event(Events::SIM_END);
+                    break;
+                default:
+                    std::cout<<"SECOND THREAD"<<std::endl;//<<"Please choose a valid option"<<std::endl;
+                    //std::cout <<"Enter\n 'r' to run\n" <<"'s' to stop\n" <<"'e' to exit.\n" <<" > ";
+                    break;
+            }
+        }
+
+
+
+
+    }
+}
+
+bool check_me2(Simulation& sim)
+{
+    if (event_to_text(sim.get_event()) == event_to_text(Events::SIM_STOP)) return true;
+
+    if(event_to_text(sim.get_event()) == event_to_text(Events::SIM_END)) return true;
+
     return false;
 }
 
@@ -101,7 +157,7 @@ void populate_cores()
 int random_disp()
 {
     int random_disp;
-    
+
 
     int hi = vDisp.size();
     int lo = 0;

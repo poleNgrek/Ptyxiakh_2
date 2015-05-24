@@ -63,6 +63,7 @@ class Core
 	private:
 		queue<int> core_job_queue;
 		bool inside_disp = false;
+		bool green_node ;//future use
 
 		friend class Core_topology;
 		friend class Core_idle;

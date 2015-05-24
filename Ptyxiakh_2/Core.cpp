@@ -87,7 +87,7 @@ int Core::fill_core_queue()
     int dispatchR;
 
     if(!is_inside_disp()){
-       dispatchR = random_disp();
+       dispatchR = random_disp();//getting random dispatcher
        vDisp.at(dispatchR)->add_core_q(*this);
        it_is_now();//inside the core_queue of a random disp hopefully
     }

@@ -12,19 +12,25 @@
 class Dispatcher;
 class Core;
 
-std::vector<std::unique_ptr<Dispatcher>> vDisp;
-std::vector<std::unique_ptr<Core>> vCore;
+using namespace std;
+
+vector<std::unique_ptr<Dispatcher>> vDisp;
+vector<std::unique_ptr<Core>> vCore;
 
 int main()
 {
     srand(static_cast<unsigned int>(time(0)));
+
     Simulation sim;
     bool flag = false;
-    int sth = random_disp();
-    std::cout<<sth<<" random disp"<<std::endl;
 
-    std::cout <<
-    "Enter 'r' to run\n" <<
+    ////////////////////////////////
+    int sth = random_disp();
+    cout<<sth<<" random disp"<<endl;
+    //////////////////////////////////
+
+    cout <<
+    "Enter\n'r' to run\n" <<
     "'s' to stop\n" <<
     "'e' to exit.\n" <<
     " > ";
@@ -34,7 +40,8 @@ int main()
     while (!flag) // Infinite loop
     {
         flag = check_message(sim);
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        this_thread::sleep_for(chrono::milliseconds(200));
+        worker_thread.get();
     }
 
     worker_thread.get();

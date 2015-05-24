@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 
 /******************************************************************************/
 
@@ -22,7 +23,8 @@ Simulation::Simulation() :
     simulation_exit(*this),
     m_current_state(nullptr),
     m_previous_state(States::ILLEGAL),
-    m_current_event(Events::ILLEGAL)
+    m_current_event(Events::ILLEGAL),
+    current_state(States::ILLEGAL)
 {
     change_state(States::SIM_START);
 }
@@ -118,7 +120,13 @@ Simulation_start::Simulation_start(Simulation& state_controller)
 void Simulation_start::on_entry()
 {
     std::cout << "Simulation_start on_entry()\n";
-    m_state_machine_controller.initialization();
+    if(vDisp.empty())
+        {
+        if(vCore.empty())
+        {
+            m_state_machine_controller.initialization();
+        }
+    }
 }
 
 void Simulation_start::on_exit()
@@ -151,6 +159,21 @@ Simulation_running::Simulation_running(Simulation& state_controller)
 void Simulation_running::on_entry()
 {
     std::cout << "Simulation_running on_entry()\n";
+    std::cout<<"State: "<<state_to_text(m_state_machine_controller.m_current_state->get_state())<<std::endl;
+    bool flag = false;
+    auto sim_run_thread = sim_running_thread(m_state_machine_controller);
+
+    while (!flag) // Infinite loop producing random numbers every "poisson" time
+    {
+        flag = check_me2(m_state_machine_controller);
+        std::cout<<"DA FAQ "<<flag<<std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    }
+
+    //sim_run_thread.get();
+
+
+    //std::cout<<"State: "<<state_to_text(m_state_machine_controller.m_previous_state)<<std::endl;
 }
 
 void Simulation_running::on_exit()
@@ -202,6 +225,7 @@ void Simulation_exit::on_entry()
 void Simulation_exit::on_exit()
 {
     std::cout << "Simulation_exit on_exit()\n";
+    //std:exit(0);
 }
 
 void Simulation_exit::handle_event(Events events)

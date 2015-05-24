@@ -6,7 +6,7 @@
   * State_manager abstract class.
   * The states have each their own logic and are implemented as separate classes
   * friended with the main class Simulation.
-  * Each state has an on_entry and an on_exit function, as well as an event 
+  * Each state has an on_entry and an on_exit function, as well as an event
   * handler (handle_event), which are inherited from the State_manager class.
   * These functions need to be overriden.
   *
@@ -107,6 +107,7 @@ private:
     // Current and previous state
     State_manager<Simulation>* m_current_state;
     States m_previous_state;
+    States current_state;
     // Current event being handled
     Events m_current_event;
 
