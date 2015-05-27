@@ -12,7 +12,6 @@
 
 //extern std::vector<Dispatcher> vDisp;
 //extern std::vector<Core> vCore;
-
 // Simulation
 
 // Constructor
@@ -23,8 +22,7 @@ Simulation::Simulation() :
     simulation_exit(*this),
     m_current_state(nullptr),
     m_previous_state(States::ILLEGAL),
-    m_current_event(Events::ILLEGAL),
-    current_state(States::ILLEGAL)
+    m_current_event(Events::ILLEGAL)
 {
     change_state(States::SIM_START);
 }
@@ -158,6 +156,17 @@ Simulation_running::Simulation_running(Simulation& state_controller)
 
 void Simulation_running::on_entry()
 {
+    /*****************************/
+    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
+
+    //mt19937 mt_rand(seed);
+    auto dice_rand = std::bind(std::uniform_int_distribution<int>(1,9999), mt19937(seed));
+
+    mt19937 nrg;
+    poisson_distribution<int> poisson(4.9);
+
+    /*****************************/
+
     std::cout << "Simulation_running on_entry()\n";
     std::cout<<"State: "<<state_to_text(m_state_machine_controller.m_current_state->get_state())<<std::endl;
     bool flag = false;
@@ -166,8 +175,18 @@ void Simulation_running::on_entry()
     while (!flag) // Infinite loop producing random numbers every "poisson" time
     {
         flag = check_me2(m_state_machine_controller);
-        std::cout<<"DA FAQ "<<flag<<std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
+        int job = dice_rand();
+        int sth = random_disp();
+
+        std::cout<<"DA FAQ "<<flag<<" - - - Random Disp Number: "<<sth<<" - - - Random Job: "<<job<<std::endl;
+        std::cout<<"Job sending"<<std::endl;
+        vDisp.at(sth)->add_job_q(job);
+        vDisp.at(sth)->schedule_event(Events::DISP_JOB);
+
+
+        std::this_thread::sleep_for(std::chrono::seconds(poisson(nrg)));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     }
 
     //sim_run_thread.get();

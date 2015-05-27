@@ -8,6 +8,10 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <random>
+#include <chrono>
+#include <functional>
+
 
 class Dispatcher;
 class Core;

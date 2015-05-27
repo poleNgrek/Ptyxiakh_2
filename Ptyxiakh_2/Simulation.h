@@ -107,7 +107,8 @@ private:
     // Current and previous state
     State_manager<Simulation>* m_current_state;
     States m_previous_state;
-    States current_state;
+    //States current_state;
+
     // Current event being handled
     Events m_current_event;
 

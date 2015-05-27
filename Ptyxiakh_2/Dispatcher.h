@@ -71,6 +71,11 @@ class Dispatcher
 
 		void schedule_event(Events);
 		void assign_job(int job);
+		   // Event setter
+        void set_event(Events);
+
+        // Event getter
+        Events get_event();
 		//void fill_core_queue();
 
 		/* Getters for dispatcher queues */
@@ -105,6 +110,7 @@ class Dispatcher
 
 		State_manager<Dispatcher>* disp_curr_state;
 		States disp_prev_state;
+		Events disp_current_event;
 
 		void change_state(States);
 };

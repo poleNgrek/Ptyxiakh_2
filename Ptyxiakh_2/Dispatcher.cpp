@@ -13,7 +13,8 @@ Dispatcher::Dispatcher() :
 	disp_state_serve(*this),
 	disp_state_idle(*this),
 	disp_curr_state(nullptr),
-	disp_prev_state(States::ILLEGAL)
+	disp_prev_state(States::ILLEGAL),
+	disp_current_event(Events::ILLEGAL)
 {
 	change_state(States::DISP_IDLE);
 }
@@ -28,9 +29,10 @@ Dispatcher::~Dispatcher()
 	disp_curr_state = nullptr;
 }
 
-void Dispatcher::schedule_event(Events event)
+void Dispatcher::schedule_event(Events events)
 {
-	disp_curr_state->handle_event(event);
+	disp_curr_state->handle_event(events);
+	set_event(events);
 }
 
 //CORES should NOT be able to get a job while inside topology state
@@ -97,6 +99,16 @@ void Dispatcher::change_state(States new_state)
     disp_curr_state->on_entry();
 }
 
+void Dispatcher::set_event(Events events)
+{
+    disp_current_event = events;
+}
+
+Events Dispatcher::get_event()
+{
+    return disp_current_event;
+}
+
 /* STATE CLASSES CONSTRUCTORS WITH THEIR FUNCTIONS ON_ENTRY/ON_EXIT */
 
 						//DISPACHER_IDLE
@@ -137,8 +149,16 @@ Dispatcher_serve::Dispatcher_serve(Dispatcher& state_controller)
 void Dispatcher_serve::on_entry()
 {
 	std::cout<<"Dis iz Dispacher_serve on_entry IN DA HOYSE"<<std::endl;
+    int job = m_state_machine_controller.get_job_q();
+    m_state_machine_controller.pop_job_q();
+    std::cout<<"JOB PRODUCED IN SIMULATION AND SHOWN BY DISPATCHER: "<<job<<std::endl;
 
+    //getting a core first on the list in order to assign a job;
+    Core kore = m_state_machine_controller.get_core_q();
+    kore.add_core_job_q(job);
+    m_state_machine_controller.pop_core_q();
 
+    kore.schedule_event(Events::CORE_JOB);
 }
 
 void Dispatcher_serve::on_exit()

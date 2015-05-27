@@ -59,6 +59,7 @@ class Core
 		//getter/setter to check if it is registered to any of the dispatchers' queue
 		bool is_inside_disp(){return inside_disp; }
 		void it_is_now(){inside_disp = true;}
+		void now_its_not(){inside_disp = false;}
 
 	private:
 		queue<int> core_job_queue;

@@ -109,6 +109,7 @@ void Core_topology::on_entry()
 	std::cout<<"Dis iz Core_topology on_entry IN DA HOYSE"<<std::endl;
 	int dsptcher = m_state_machine_controller.fill_core_queue();
 	std::cout<<"I joined successfully disp No. "<<dsptcher<<std::endl;
+	m_state_machine_controller.schedule_event(Events::CORE_IDLE);
 }
 
 void Core_topology::on_exit()
@@ -142,6 +143,12 @@ Core_idle::Core_idle(Core& state_controller)
 void Core_idle::on_entry()
 {
 	std::cout<<"Dis iz Core_idle on_entry IN DA HOYSE"<<std::endl;
+
+	//we check if the core is idle after serving a job
+	if(!m_state_machine_controller.is_inside_disp()){
+        int dsptcher = m_state_machine_controller.fill_core_queue();
+        std::cout<<"I Joined another disp with the Number: "<<dsptcher<<std::endl;
+	}
 }
 
 void Core_idle::on_exit()
@@ -174,7 +181,24 @@ Core_serve::Core_serve(Core& state_controller)
 
 void Core_serve::on_entry()
 {
-	std::cout<<"Dis iz Core_serve on_entry IN DA HOYSE"<<std::endl;
+	std::cout<<"Dis iz Core_serve on_entry IN DA HOYSE - - - Time to serve"<<std::endl;
+
+    if(m_state_machine_controller.core_job_queue.empty()){
+        std::cout<<"My queue is empty...\n Error"<<std::endl;
+    }
+
+	while(!m_state_machine_controller.core_job_queue.empty())
+    {
+        int job = m_state_machine_controller.get_core_job_q();
+        std::cout<<"Core is processing the request - - - Job with number: "<<job<<std::endl;
+        m_state_machine_controller.pop_core_job_q();
+    }
+
+    //since core's job q is empty before changing state to idle we have to clarify thats it does not belong to a disp
+    m_state_machine_controller.now_its_not();
+
+    //changing state to idle so it can rejoin a dispatcher
+    m_state_machine_controller.change_state(States::CORE_IDLE);
 }
 
 void Core_serve::on_exit()
