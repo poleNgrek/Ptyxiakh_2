@@ -1,14 +1,8 @@
 #include "Simulation.h"
-#include "Dispatcher.h"
-#include "Core.h"
 #include "Functions.h"
 #include "Externals.h"
 
-#include <vector>
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <random>
 #include <chrono>
 #include <functional>
 
@@ -16,21 +10,26 @@
 class Dispatcher;
 class Core;
 
-using namespace std;
+// Not abusing "using namespace std"
+// We use cout and cin since they are the most prevalent
+using std::cout;
+using std::cin;
 
-vector<std::unique_ptr<Dispatcher>> vDisp;
-vector<std::unique_ptr<Core>> vCore;
+std::vector<std::unique_ptr<Dispatcher>> vDisp;
+std::vector<std::unique_ptr<Core>> vCore;
+
+// Static_cast because we don't want 64bit numbers
+int seed = static_cast<int>
+    (std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
 int main()
 {
-    srand(static_cast<unsigned int>(time(0)));
-
     Simulation sim;
     bool flag = false;
 
     ////////////////////////////////
     int sth = random_disp();
-    cout<<sth<<" random disp"<<endl;
+    cout<< sth <<" random disp" <<endl;
     //////////////////////////////////
 
     cout <<
@@ -45,11 +44,9 @@ int main()
     {
         flag = check_message(sim);
         this_thread::sleep_for(chrono::milliseconds(200));
-        worker_thread.get();
     }
 
     worker_thread.get();
 
     return 0;
 }
-

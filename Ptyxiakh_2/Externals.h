@@ -1,21 +1,32 @@
+/**
+  * Externals.h
+  *
+  * Version 0.5
+  * Last edit: 10/07/2015
+  *
+  * Variables wich will be used across the whole project
+  *
+  * K. Triantafyllou
+  * B. Paleologos
+  *
+**/
+
 #ifndef EXTERNALS_H_
 #define EXTERNALS_H_
 
 #include <vector>
 #include <memory>
-#include <random>
-#include <chrono>
-#include <functional>
 
+// Forward declaration
 class Dispatcher;
 class Core;
 
-using namespace std;
+/// Vector of pointers to dispatcher objects
+extern std::vector<std::unique_ptr<Dispatcher>> vDisp;
+/// Vector of pointers to core objects
+extern std::vector<std::unique_ptr<Core>> vCore;
 
-extern vector<unique_ptr<Dispatcher>> vDisp;
-extern vector<unique_ptr<Core>> vCore;
-
-//auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
-
+/// Seed for random functions
+extern int seed;
 
 #endif // EXTERNALS_H_

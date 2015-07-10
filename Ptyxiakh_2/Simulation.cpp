@@ -157,7 +157,7 @@ Simulation_running::Simulation_running(Simulation& state_controller)
 void Simulation_running::on_entry()
 {
     /*****************************/
-    auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
+    //auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
 
     //mt19937 mt_rand(seed);
     auto dice_rand = std::bind(std::uniform_int_distribution<int>(1,9999), mt19937(seed));
