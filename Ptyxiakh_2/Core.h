@@ -64,6 +64,7 @@ class Core
 
         // Event getter
 		Events get_event();
+
 		int fill_core_queue();
 
 		int get_core_job_q()

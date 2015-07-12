@@ -8,6 +8,7 @@
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include <random>
 
 class Dispatcher;
 
@@ -156,15 +157,9 @@ void populate_cores()
 
 int random_disp()
 {
-    int random_disp;
+    std::random_device device;
+    std::mt19937 generator(device());
+    std::uniform_int_distribution<int> distribution(0, vDisp.size() - 1);
 
-
-    int hi = vDisp.size();
-    int lo = 0;
-    int vD_range = (hi - lo)/* + 1*/;
-
-
-    random_disp = lo + int(rand()% vD_range);
-
-    return random_disp;
+    return distribution(generator);
 }

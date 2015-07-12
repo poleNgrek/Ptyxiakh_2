@@ -27,10 +27,10 @@ int main()
     Simulation sim;
     bool flag = false;
 
-    ////////////////////////////////
-    int sth = random_disp();
-    cout<< sth <<" random disp" <<endl;
-    //////////////////////////////////
+    ////////////////////////////////      //WTF
+    int sth = random_disp();              //WTF
+    cout<< sth <<" random disp" <<endl;   //WTF
+    //////////////////////////////////    //WTF
 
     cout <<
     "Enter\n'r' to run\n" <<
