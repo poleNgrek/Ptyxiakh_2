@@ -54,3 +54,12 @@ Temporary Items
 *.log
 *.tlog
 *.idb
+*.name
+*.xml
+*.txt
+.idea/Ptyxiakh_2.iml
+Ptyxiakh_2.vcxproj.user
+*.cbp
+*.depend
+*.o
+*.layout

@@ -1,16 +1,23 @@
 #include "Simulation.h"
 #include "General_states.h"
 #include "General_events.h"
+#include "Functions.h"
+#include "Externals.h"
 
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <random>
 
 /******************************************************************************/
 
+//extern std::vector<Dispatcher> vDisp;
+//extern std::vector<Core> vCore;
 // Simulation
 
 // Constructor
 // Initializes state classes and starts the first state.
-Simulation::Simulation() : 
+Simulation::Simulation() :
     simulation_start(*this),
     simulation_running(*this),
     simulation_exit(*this),
@@ -31,6 +38,7 @@ Simulation::~Simulation()
     }
     m_current_state = nullptr;
 }
+
 
 // Uses the event handler of the current state.
 void Simulation::schedule_event(Events events)
@@ -67,11 +75,11 @@ void Simulation::change_state(States new_state)
         m_current_state = nullptr;
         // Print out error message
         std::cout << "Illegal state transition!\n"
-            << "Our previous state was "
-            << state_to_text(m_previous_state)
-            << " and the new state was "
-            << state_to_text(new_state)
-            << std::endl;
+                  << "Our previous state was "
+                  << state_to_text(m_previous_state)
+                  << " and the new state was "
+                  << state_to_text(new_state)
+                  << std::endl;
         exit(-15);
         break;
     }
@@ -82,6 +90,9 @@ void Simulation::change_state(States new_state)
 
 void Simulation::initialization()
 {
+    std::cout<<"Simulation on initialization !!"<<std::endl;
+    populate_dispatchers();
+    populate_cores();
 }
 
 void Simulation::set_event(Events events)
@@ -108,11 +119,19 @@ Simulation_start::Simulation_start(Simulation& state_controller)
 void Simulation_start::on_entry()
 {
     std::cout << "Simulation_start on_entry()\n";
+    if(vDisp.empty())
+    {
+        if(vCore.empty())
+        {
+            m_state_machine_controller.initialization();
+        }
+    }
 }
 
 void Simulation_start::on_exit()
 {
     std::cout << "Simulation_start on_exit()\n";
+
 }
 
 void Simulation_start::handle_event(Events events)
@@ -138,7 +157,45 @@ Simulation_running::Simulation_running(Simulation& state_controller)
 
 void Simulation_running::on_entry()
 {
+    /*****************************/
+    //auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
+
+    //mt19937 mt_rand(seed);
+    auto dice_rand = std::bind(std::uniform_int_distribution<int>(1,9999),
+                               mt19937(seed));
+
+    mt19937 nrg;
+    poisson_distribution<int> poisson(4.9);
+
+    /*****************************/
+
     std::cout << "Simulation_running on_entry()\n";
+    std::cout<<"State: "<<state_to_text(
+                 m_state_machine_controller.m_current_state->get_state())<<std::endl;
+    bool flag = false;
+    auto sim_run_thread = sim_running_thread(m_state_machine_controller);
+
+    while (!flag) // Infinite loop producing random numbers every "poisson" time
+    {
+        flag = check_me2(m_state_machine_controller);
+
+        int job = dice_rand();
+        int sth = random_disp();
+
+        std::cout<<"DA FAQ "<<flag<<" - - - Random Disp Number: "<<sth<<" - - - Random Job: "<<job<<std::endl;
+        std::cout<<"Job sending"<<std::endl;
+        vDisp.at(sth)->add_job_q(job);
+        vDisp.at(sth)->schedule_event(Events::DISP_JOB);
+
+
+        std::this_thread::sleep_for(std::chrono::seconds(poisson(nrg)));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    }
+
+    //sim_run_thread.get();
+
+
+    //std::cout<<"State: "<<state_to_text(m_state_machine_controller.m_previous_state)<<std::endl;
 }
 
 void Simulation_running::on_exit()
@@ -170,11 +227,27 @@ Simulation_exit::Simulation_exit(Simulation& state_controller)
 void Simulation_exit::on_entry()
 {
     std::cout << "Simulation_exit on_entry()\n";
+
+    /*if (!vCore.empty())
+    {
+        std::cout << "I need to destruct " << vCore.size() << " cores." << std::endl;
+        vCore.clear();
+        std::cout << vCore.size() << " remain" << std::endl;
+
+    }*/
+
+    if (!vDisp.empty())
+    {
+        std::cout<<"I need to destruct "<< vDisp.size() <<" disps."<<std::endl;
+        vDisp.clear();
+        std::cout<<vDisp.size()<<" remain"<<std::endl;
+    }
 }
 
 void Simulation_exit::on_exit()
 {
     std::cout << "Simulation_exit on_exit()\n";
+    //std:exit(0);
 }
 
 void Simulation_exit::handle_event(Events events)
