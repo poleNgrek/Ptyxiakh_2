@@ -75,11 +75,11 @@ void Simulation::change_state(States new_state)
         m_current_state = nullptr;
         // Print out error message
         std::cout << "Illegal state transition!\n"
-            << "Our previous state was "
-            << state_to_text(m_previous_state)
-            << " and the new state was "
-            << state_to_text(new_state)
-            << std::endl;
+                  << "Our previous state was "
+                  << state_to_text(m_previous_state)
+                  << " and the new state was "
+                  << state_to_text(new_state)
+                  << std::endl;
         exit(-15);
         break;
     }
@@ -120,7 +120,7 @@ void Simulation_start::on_entry()
 {
     std::cout << "Simulation_start on_entry()\n";
     if(vDisp.empty())
-        {
+    {
         if(vCore.empty())
         {
             m_state_machine_controller.initialization();
@@ -161,7 +161,8 @@ void Simulation_running::on_entry()
     //auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
 
     //mt19937 mt_rand(seed);
-    auto dice_rand = std::bind(std::uniform_int_distribution<int>(1,9999), mt19937(seed));
+    auto dice_rand = std::bind(std::uniform_int_distribution<int>(1,9999),
+                               mt19937(seed));
 
     mt19937 nrg;
     poisson_distribution<int> poisson(4.9);
@@ -169,7 +170,8 @@ void Simulation_running::on_entry()
     /*****************************/
 
     std::cout << "Simulation_running on_entry()\n";
-    std::cout<<"State: "<<state_to_text(m_state_machine_controller.m_current_state->get_state())<<std::endl;
+    std::cout<<"State: "<<state_to_text(
+                 m_state_machine_controller.m_current_state->get_state())<<std::endl;
     bool flag = false;
     auto sim_run_thread = sim_running_thread(m_state_machine_controller);
 
