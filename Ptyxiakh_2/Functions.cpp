@@ -34,19 +34,19 @@ void wait_for_input(Simulation& sim)
         {
             switch (s)
             {
-                case 'r':
-                    sim.schedule_event(Events::SIM_START);
-                    break;
-                case 's':
-                    sim.schedule_event(Events::SIM_STOP);
-                    break;
-                case 'e':
-                    sim.schedule_event(Events::SIM_END);
-                    break;
-                default:
-                    std::cout<<"Please choose a valid option"<<std::endl;
-                    std::cout <<"Enter\n 'r' to run\n" <<"'s' to stop\n" <<"'e' to exit.\n" <<" > ";
-                    break;
+            case 'r':
+                sim.schedule_event(Events::SIM_START);
+                break;
+            case 's':
+                sim.schedule_event(Events::SIM_STOP);
+                break;
+            case 'e':
+                sim.schedule_event(Events::SIM_END);
+                break;
+            default:
+                std::cout<<"Please choose a valid option"<<std::endl;
+                std::cout <<"Enter\n 'r' to run\n" <<"'s' to stop\n" <<"'e' to exit.\n" <<" > ";
+                break;
             }
         }
         else
@@ -87,35 +87,33 @@ void w8_for_input(Simulation& sim)
         {
             switch (s)
             {
-                case 'r':
-                    //sim.schedule_event(Events::SIM_START);
-                    break;
-                case 'p':
-                    sim.schedule_event(Events::SIM_STOP);
-                    guard_cout.unlock();
-                    std::this_thread::yield();
-                    break;
-                case 'e':
-                    //sim.schedule_event(Events::SIM_END);
-                    break;
-                default:
-                    std::cout<<"SECOND THREAD"<<std::endl;//<<"Please choose a valid option"<<std::endl;
-                    //std::cout <<"Enter\n 'r' to run\n" <<"'s' to stop\n" <<"'e' to exit.\n" <<" > ";
-                    break;
+            case 'r':
+                //sim.schedule_event(Events::SIM_START);
+                break;
+            case 'p':
+                sim.schedule_event(Events::SIM_STOP);
+                guard_cout.unlock();
+                std::this_thread::yield();
+                break;
+            case 'e':
+                //sim.schedule_event(Events::SIM_END);
+                break;
+            default:
+                std::cout<<"SECOND THREAD"<<std::endl;//<<"Please choose a valid option"<<std::endl;
+                //std::cout <<"Enter\n 'r' to run\n" <<"'s' to stop\n" <<"'e' to exit.\n" <<" > ";
+                break;
             }
         }
-
-
-
-
     }
 }
 
 bool check_me2(Simulation& sim)
 {
-    if (event_to_text(sim.get_event()) == event_to_text(Events::SIM_STOP)) return true;
+    if (event_to_text(sim.get_event()) == event_to_text(Events::SIM_STOP)) return
+            true;
 
-    if(event_to_text(sim.get_event()) == event_to_text(Events::SIM_END)) return true;
+    if(event_to_text(sim.get_event()) == event_to_text(Events::SIM_END)) return
+            true;
 
     return false;
 }
@@ -131,10 +129,11 @@ void populate_dispatchers()
     vDisp.reserve(dispNumb);
 
     /// Create the actual Dispatchers
-    for (auto i=0; i<dispNumb; ++i){
+    for (auto i=0; i<dispNumb; ++i)
+    {
         vDisp.push_back(std::unique_ptr<Dispatcher> (new Dispatcher));
         std::cout<<"Disp n."<<i<<" Created"<<std::endl;
-}
+    }
 }
 
 void populate_cores()
@@ -152,7 +151,7 @@ void populate_cores()
     {
         vCore.push_back(std::unique_ptr<Core> (new Core));
         //vCore.at(i).id=i;
-       // std::cout<<"Fake ID for core: "<<vCore.at(i).id<<" (Inside function/populate_cores)\n";
+        // std::cout<<"Fake ID for core: "<<vCore.at(i).id<<" (Inside function/populate_cores)\n";
     }
 }
 

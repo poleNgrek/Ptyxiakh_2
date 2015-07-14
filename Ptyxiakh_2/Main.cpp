@@ -15,10 +15,11 @@ class Core;
 using std::cout;
 using std::cin;
 
-std::vector<std::unique_ptr<Dispatcher>> vDisp;
-std::vector<std::unique_ptr<Core>> vCore;
+std::vector<std::unique_ptr<Dispatcher> > vDisp;
+std::vector<std::unique_ptr<Core> > vCore;
 
-unsigned seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+unsigned seed =
+    std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
 std::default_random_engine generator(seed);
 
@@ -33,10 +34,10 @@ int main()
     //////////////////////////////////    //WTF
 
     cout <<
-    "Enter\n'r' to run\n" <<
-    "'s' to stop\n" <<
-    "'e' to exit.\n" <<
-    " > ";
+         "Enter\n'r' to run\n" <<
+         "'s' to stop\n" <<
+         "'e' to exit.\n" <<
+         " > ";
 
     auto worker_thread = simulation_event_generator(sim);
 
