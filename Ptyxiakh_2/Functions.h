@@ -16,7 +16,6 @@
 
 #include "Dispatcher.h"
 #include "Core.h"
-#include "Externals.h"
 
 #include <future>
 #include <vector>

@@ -59,3 +59,7 @@ Temporary Items
 *.txt
 .idea/Ptyxiakh_2.iml
 Ptyxiakh_2.vcxproj.user
+*.cbp
+*.depend
+*.o
+*.layout

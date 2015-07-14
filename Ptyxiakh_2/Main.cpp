@@ -18,9 +18,9 @@ using std::cin;
 std::vector<std::unique_ptr<Dispatcher>> vDisp;
 std::vector<std::unique_ptr<Core>> vCore;
 
-// Static_cast because we don't want 64bit numbers
-int seed = static_cast<int>
-    (std::chrono::high_resolution_clock::now().time_since_epoch().count());
+unsigned seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+
+std::default_random_engine generator(seed);
 
 int main()
 {

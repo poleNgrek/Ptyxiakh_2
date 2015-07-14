@@ -2,6 +2,7 @@
 #include "Externals.h"
 #include "Simulation.h"
 #include "General_events.h"
+#include "Externals.h"
 
 #include <iostream>
 
@@ -157,9 +158,8 @@ void populate_cores()
 
 int random_disp()
 {
-    std::random_device device;
-    std::mt19937 generator(device());
     std::uniform_int_distribution<int> distribution(0, vDisp.size() - 1);
+    auto test = distribution(generator);
 
-    return distribution(generator);
+    return test;
 }

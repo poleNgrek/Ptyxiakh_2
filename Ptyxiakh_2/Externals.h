@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <memory>
+#include <random>
 
 // Forward declaration
 class Dispatcher;
@@ -27,6 +28,8 @@ extern std::vector<std::unique_ptr<Dispatcher>> vDisp;
 extern std::vector<std::unique_ptr<Core>> vCore;
 
 /// Seed for random functions
-extern int seed;
+extern unsigned seed;
+
+extern std::default_random_engine generator;
 
 #endif // EXTERNALS_H_
