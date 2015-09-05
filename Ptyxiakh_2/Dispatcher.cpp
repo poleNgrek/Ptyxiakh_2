@@ -2,72 +2,83 @@
 #include "Core.h"
 #include "General_states.h"
 #include "General_events.h"
-//#include "Externals.h"
+#include "Externals.h"
+#include "Functions.h"
 
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 
-using namespace std;
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// TO BE CHECKED
+class Core;
 
 Dispatcher::Dispatcher() :
-	disp_state_serve(*this),
-	disp_state_idle(*this),
-	disp_curr_state(nullptr),
-	disp_prev_state(States::ILLEGAL)
+    disp_state_serve(*this),
+    disp_state_idle(*this),
+    disp_curr_state(nullptr),
+    disp_prev_state(States::ILLEGAL),
+    disp_current_event(Events::ILLEGAL)
 {
-	change_state(States::DISP_IDLE);
+    change_state(States::DISP_IDLE);
 }
 
 Dispatcher::~Dispatcher()
 {
-	if(disp_curr_state)
-	{
-		disp_curr_state->on_exit();
-	}
+    if(disp_curr_state)
+    {
+        disp_curr_state->on_exit();
+    }
 
-	disp_curr_state = nullptr;
+    disp_curr_state = nullptr;
 }
 
-void Dispatcher::schedule_event(Events event)
+void Dispatcher::schedule_event(Events events)
 {
-	disp_curr_state->handle_event(event);
+    disp_curr_state->handle_event(events);
+    set_event(events);
 }
 
 //CORES should NOT be able to get a job while inside topology state
 //we assume topology state as a set up state where cores join dispatchers' queues
 void Dispatcher::assign_job(int job)
 {
-	//getting the first core from dispacher's core_queue.
-	Core& kor = get_core_q();
+    int kore = random_core();
+    if(vCore.at(kore)->get_event() == Events::CORE_IDLE)
+    {
+        vCore.at(kore)->add_core_job_q(job);
+        vCore.at(kore)->schedule_event(Events::CORE_JOB);
+    }else{
+        std::cout<<"Core is not ready"<<std::endl;
+    }
+    /*//getting the first core from dispacher's core_queue.
+    Core& kor = get_core_q();
 
-	//popping the core we got from the dispacher's queue.
-	pop_core_q();
+    //popping the core we got from the dispacher's queue.
+    pop_core_q();
 
-	//Assigning the job - Changing the the state where needed
+    //Assigning the job - Changing the the state where needed
 
-	if(kor.get_event() == Events::CORE_IDLE)
-	{
-		kor.schedule_event(Events::CORE_JOB);
-		kor.add_core_job_q(job);
-	}
-	else if(kor.get_event() == Events::CORE_JOB)
-	{
-		kor.add_core_job_q(job);
-	}
-	else{
-		cout<<"Error, Core is not ready to get the job."<<endl;
-	}
+    if(kor.get_event() == Events::CORE_IDLE)
+    {
+        kor.schedule_event(Events::CORE_JOB);
+        kor.add_core_job_q(job);
+    }
+    else if(kor.get_event() == Events::CORE_JOB)
+    {
+        kor.add_core_job_q(job);
+    }
+    else
+    {
+        std::cout << "Error, Core is not ready to get the job." << std::endl;
+    }*/
 }
 
-void Dispatcher::fill_core_queue()
-{
-
-}
 
 void Dispatcher::change_state(States new_state)
 {
-	//copy-pasta from charlie's awesome error checking
-	if (disp_curr_state)
+    //copy-pasta from charlie's awesome error checking
+    if (disp_curr_state)
     {
         // First we make sure to cleanup the state we are in
         disp_curr_state->on_exit();
@@ -88,78 +99,119 @@ void Dispatcher::change_state(States new_state)
         disp_curr_state = nullptr;
         // Print out error message
         std::cout << "Illegal state transition!\n"
-            << "Our previous state was "
-            << state_to_text(disp_prev_state)
-            << " and the new state was "
-            << state_to_text(new_state)
-            << std::endl;
-			exit(-15);
-			break;
+                  << "Our previous state was "
+                  << state_to_text(disp_prev_state)
+                  << " and the new state was "
+                  << state_to_text(new_state)
+                  << std::endl;
+        exit(-15);
+        break;
     }
 
     // If all is OK, we can start the new state.
     disp_curr_state->on_entry();
 }
 
+void Dispatcher::set_event(Events events)
+{
+    disp_current_event = events;
+}
+
+Events Dispatcher::get_event()
+{
+    return disp_current_event;
+}
+
 /* STATE CLASSES CONSTRUCTORS WITH THEIR FUNCTIONS ON_ENTRY/ON_EXIT */
 
-						//DISPACHER_IDLE
+//DISPACHER_IDLE
 Dispatcher_idle::Dispatcher_idle(Dispatcher& state_controller)
-	: State_manager(States::DISP_IDLE, state_controller)
-	{}
+    : State_manager(States::DISP_IDLE, state_controller)
+{}
 
 void Dispatcher_idle::on_entry()
 {
-	std::cout << "This is Dispacher_idle on_entry"<<std::endl;
+    std::cout << "Dispacher_idle on_entry" << std::endl;
+
+    std::ofstream myfile("Logs.txt",std::ios::in|std::ios::out|std::ios::app);
+    if(!myfile)
+    {
+        std::cerr << "Can't open output file 'Logs.txt'"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(myfile.is_open()){
+        myfile << "Dispatcher on state Idle.\n";
+        myfile.close();
+    }
 }
 
 void Dispatcher_idle::on_exit()
 {
-	std::cout<<"This is Dispacher_idle on_exit"<<std::endl;
+    std::cout << "Dispacher_idle on_exit" << std::endl;
 }
 
 void Dispatcher_idle::handle_event(Events event)
 {
-	switch(event)
-	{
-		case Events::DISP_JOB:
-			m_state_machine_controller.change_state(States::DISP_SERVE);
-			break;
-		default:
-			break;
-	}
+    switch(event)
+    {
+    case Events::DISP_JOB:
+        m_state_machine_controller.change_state(States::DISP_SERVE);
+        break;
+    default:
+        break;
+    }
 }
 
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
-						//DISPACHER_SERVE
+//DISPACHER_SERVE
 Dispatcher_serve::Dispatcher_serve(Dispatcher& state_controller)
-	: State_manager(States::DISP_SERVE, state_controller)
-	{}
+    : State_manager(States::DISP_SERVE, state_controller)
+{}
 
 void Dispatcher_serve::on_entry()
 {
-	std::cout<<"Dis iz Dispacher_serve on_entry IN DA HOYSE"<<std::endl;
+    std::ofstream myfile("Logs.txt",std::ios::in|std::ios::out|std::ios::app);
+    if(!myfile)
+    {
+        std::cerr << "Can't open output file 'Logs.txt'"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(myfile.is_open()){
+        myfile << "Dispatcher on state Serve.\n";
+        myfile.close();
+    }
 
+    std::cout << "Dispacher_serve on_entry" << std::endl;
+    int job = m_state_machine_controller.get_job_q();
+    m_state_machine_controller.pop_job_q();
+    std::cout << "Job given from simulation and shown by dispatcher: " << job << std::endl;
 
+    m_state_machine_controller.assign_job(job);
+    //getting a core first on the list in order to assign a job;
+    /*Core kore = m_state_machine_controller.get_core_q();
+    kore.add_core_job_q(job);
+    m_state_machine_controller.pop_core_q();
+
+    kore.schedule_event(Events::CORE_JOB);*/
 }
 
 void Dispatcher_serve::on_exit()
 {
-	std::cout<<"Diz iz Dispacher_serve on_exit"<<std::endl;
+    std::cout << "Dispacher_serve on_exit" << std::endl;
 }
 
 void Dispatcher_serve::handle_event(Events event)
 {
-	switch(event)
-	{
-		case Events::DISP_IDLE:
-			m_state_machine_controller.change_state(States::DISP_IDLE);
-			break;
-		default:
-			break;
-	}
+    switch(event)
+    {
+    case Events::DISP_IDLE:
+        m_state_machine_controller.change_state(States::DISP_IDLE);
+        break;
+    default:
+        break;
+    }
 }
 
 /* ************************************************************ */

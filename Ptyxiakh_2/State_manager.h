@@ -56,7 +56,7 @@ public:
 protected:
     States m_state_id;
     State_machine& m_state_machine_controller; // Inherited state machines can
-                                               // use the State_manager
+    // use the State_manager
 };
 
 #endif

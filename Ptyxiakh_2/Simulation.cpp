@@ -5,13 +5,12 @@
 #include "Externals.h"
 
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
+#include <ctime>
+#include <random>
 
 /******************************************************************************/
-
-//extern std::vector<Dispatcher> vDisp;
-//extern std::vector<Core> vCore;
-
 // Simulation
 
 // Constructor
@@ -74,11 +73,11 @@ void Simulation::change_state(States new_state)
         m_current_state = nullptr;
         // Print out error message
         std::cout << "Illegal state transition!\n"
-            << "Our previous state was "
-            << state_to_text(m_previous_state)
-            << " and the new state was "
-            << state_to_text(new_state)
-            << std::endl;
+                  << "Our previous state was "
+                  << state_to_text(m_previous_state)
+                  << " and the new state was "
+                  << state_to_text(new_state)
+                  << std::endl;
         exit(-15);
         break;
     }
@@ -117,14 +116,27 @@ Simulation_start::Simulation_start(Simulation& state_controller)
 
 void Simulation_start::on_entry()
 {
+    std::ofstream myfile("Logs.txt",std::ios::in|std::ios::out|std::ios::app);
+    if(!myfile)
+    {
+        std::cerr << "Can't open output file 'Logs.txt'"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(myfile.is_open()){
+        myfile << "Simulation on state Start.\n";
+        myfile.close();
+    }
+
     std::cout << "Simulation_start on_entry()\n";
-    m_state_machine_controller.initialization();
+    if(vDisp.empty() && vCore.empty())
+    {
+       m_state_machine_controller.initialization();
+    }
 }
 
 void Simulation_start::on_exit()
 {
     std::cout << "Simulation_start on_exit()\n";
-
 }
 
 void Simulation_start::handle_event(Events events)
@@ -150,7 +162,66 @@ Simulation_running::Simulation_running(Simulation& state_controller)
 
 void Simulation_running::on_entry()
 {
+
+    std::ofstream myfile("Logs.txt",std::ios::in|std::ios::out|std::ios::app);
+    if(!myfile)
+    {
+        std::cerr << "Can't open output file 'Logs.txt'"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(myfile.is_open()){
+        myfile << "Simulation on state Running.\n";
+        myfile.close();
+    }
+    /*****************************/
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TO BE CHECKED
+    auto dice_rand = std::bind(std::uniform_int_distribution<int>(1,9999),
+                               std::mt19937(seed));
+
+    std::mt19937 nrg;
+    std::poisson_distribution<int> poisson(4.9);
+
+    /*****************************/
+
     std::cout << "Simulation_running on_entry()\n";
+    std::cout << "State: "
+              << state_to_text
+              (
+                 m_state_machine_controller.m_current_state->get_state()
+              )
+              << std::endl;
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TO BE CHECKED
+    bool flag = false;
+    auto sim_run_thread = sim_running_thread(m_state_machine_controller);
+
+    while (!flag) // Infinite loop producing random numbers every "poisson" time
+    {
+        flag = check_me2(m_state_machine_controller);
+
+        int job = dice_rand();
+        int sth = random_disp();
+
+        std::cout << "Flag: " << flag
+                  << " - - - Random Disp Number: " << sth
+                  << " - - - Random Job: " <<job
+                  << std::endl;
+        std::cout << "Job sending..."
+                  << std::endl;
+
+        vDisp.at(sth)->add_job_q(job);
+        vDisp.at(sth)->schedule_event(Events::DISP_JOB);
+
+
+        std::this_thread::sleep_for(std::chrono::seconds(poisson(nrg)));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    }
+    //sim_run_thread.get();
+
+    //std::cout<<"State: "<<state_to_text(m_state_machine_controller.m_previous_state)<<std::endl;
 }
 
 void Simulation_running::on_exit()
@@ -181,17 +252,19 @@ Simulation_exit::Simulation_exit(Simulation& state_controller)
 
 void Simulation_exit::on_entry()
 {
+
     std::cout << "Simulation_exit on_entry()\n";
+
+    /*if (!vCore.empty())
+    {
+        std::cout << "I need to destruct " << vCore.size() << " cores." << std::endl;
+        vCore.clear();
+        std::cout << vCore.size() << " remain" << std::endl;
+
+    }*/
 
     if (!vDisp.empty())
     {
-        if (!vCore.empty())
-        {
-            std::cout<<"I need to destruct "<< vCore.size() <<" cores."<<std::endl;
-            vCore.clear();
-            std::cout<<vCore.size()<<" remain"<<std::endl;
-
-        }
         std::cout<<"I need to destruct "<< vDisp.size() <<" disps."<<std::endl;
         vDisp.clear();
         std::cout<<vDisp.size()<<" remain"<<std::endl;
@@ -201,6 +274,19 @@ void Simulation_exit::on_entry()
 void Simulation_exit::on_exit()
 {
     std::cout << "Simulation_exit on_exit()\n";
+
+    std::ofstream myfile("Logs.txt",std::ios::in|std::ios::out|std::ios::app);
+    if(!myfile)
+    {
+        std::cerr << "Can't open output file 'Logs.txt'"<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    if(myfile.is_open()){
+        myfile << "Simulation on state Exit.\n";
+        myfile << "LOG FILE END\n\n\n";
+        myfile.close();
+    }
+    //std:exit(0);
 }
 
 void Simulation_exit::handle_event(Events events)

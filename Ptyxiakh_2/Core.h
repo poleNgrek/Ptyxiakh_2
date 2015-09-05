@@ -2,77 +2,119 @@
 #define CORE_H_
 
 #include "State_manager.h"
+
 #include <queue>
 
-using namespace std;
-
+// Forward declarations
+// Enumerators
 enum class States;
 enum class Events;
-
+// Classes
 class Core;
 class Dispatcher;
 
+/******************************************************************************/
+// States of Core
+// State Topology
 class Core_topology : public State_manager<Core>
 {
-	public:
-		Core_topology(Core&);
+public:
+    Core_topology(Core&);
 
-		void on_entry();
-		void on_exit();
-		void handle_event(Events);
+    void on_entry();
+    void on_exit();
+    void handle_event(Events);
 };
 
+// State Idle
 class Core_idle : public State_manager<Core>
 {
-	public:
-		Core_idle(Core&);
+public:
+    Core_idle(Core&);
 
-		void on_entry();
-		void on_exit();
-		void handle_event(Events);
+    void on_entry();
+    void on_exit();
+    void handle_event(Events);
 };
 
+// State Serve
 class Core_serve : public State_manager<Core>
 {
-	public:
-		Core_serve(Core&);
+public:
+    Core_serve(Core&);
 
-		void on_entry();
-		void on_exit();
-		void handle_event(Events);
+    void on_entry();
+    void on_exit();
+    void handle_event(Events);
 };
+/******************************************************************************/
 
+/******************************************************************************/
+// Core class
 class Core
 {
-	public:
-		Core();
-		~Core();
+public:
+    int number = 6;
+    // Constructor
+    Core();
+    // Destructor
+    ~Core();
 
-		void schedule_event(Events);
-		Events get_event();
+    // Takes and event and processes it
+    void schedule_event(Events);
 
-		int get_core_job_q() {return core_job_queue.front();}
-		void add_core_job_q(int job) {core_job_queue.push(job);}
-		void pop_core_job_q() {core_job_queue.pop();}
+    // Event getter
+    Events get_event();
 
-	private:
-		queue<int> core_job_queue;
+    int fill_core_queue();
 
-		friend class Core_topology;
-		friend class Core_idle;
-		friend class Core_serve;
+    int get_core_job_q()
+    {
+        return core_job_queue.front();
+    }
+    void add_core_job_q(int job)
+    {
+        core_job_queue.push(job);
+    }
+    void pop_core_job_q()
+    {
+        core_job_queue.pop();
+    }
 
-		Core_topology core_state_topology;
-		Core_idle core_state_idle;
-		Core_serve core_state_serve;
+    //getter/setter to check if it is registered to any of the dispatchers' queue
+    bool is_inside_disp()
+    {
+        return inside_disp;
+    }
+    void it_is_now()
+    {
+        inside_disp = true;
+    }
+    void now_its_not()
+    {
+        inside_disp = false;
+    }
 
-		State_manager<Core>* core_curr_state;
-		States core_prev_state;
+private:
+    std::queue<int> core_job_queue;
+    bool inside_disp = false;
+    bool green_node ;//future use
 
-		Events core_curr_event;
+    friend class Core_topology;
+    friend class Core_idle;
+    friend class Core_serve;
 
-		void change_state(States);
-		void set_event(Events);
+    Core_topology core_state_topology;
+    Core_idle core_state_idle;
+    Core_serve core_state_serve;
+
+    State_manager<Core>* core_curr_state;
+    States core_prev_state;
+
+    Events core_curr_event;
+
+    void change_state(States);
+    void set_event(Events);
 };
 
 #endif

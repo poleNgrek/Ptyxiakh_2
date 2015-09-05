@@ -24,7 +24,7 @@ enum class Events
     SIM_END,
     DISP_JOB,
     DISP_IDLE,
-	CORE_IDLE,
+    CORE_IDLE,
     CORE_TOPOLOGY,
     CORE_JOB
 };
