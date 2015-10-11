@@ -50,13 +50,13 @@ public:
     /*+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-*/
     // Deleted constructors and functions
     State_manager() = delete;
-    State_manager(const State_manager&) = delete;
-    State_manager& operator=(const State_manager&) = delete;
+    /*State_manager(const State_manager&) = delete;
+    State_manager& operator=(const State_manager&) = delete;*/
     /*+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-*/
 protected:
     States m_state_id;
     State_machine& m_state_machine_controller; // Inherited state machines can
-                                               // use the State_manager
+    // use the State_manager
 };
 
 #endif

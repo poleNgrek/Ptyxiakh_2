@@ -54,3 +54,7 @@ Temporary Items
 *.log
 *.tlog
 *.idb
+*.name
+*.xml
+*.txt
+.idea/Ptyxiakh_2.iml
